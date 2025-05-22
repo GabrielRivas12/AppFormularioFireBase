@@ -5,7 +5,21 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 
 
-export default function Lista({navigation}) {
+import {collection, 
+    getFirestore,
+    query, doc,
+    setDoc, getDocs} from 'firebase/firestore';
+import appFirebase from '../Firebase';
+
+    const db = getFirestore(appFirebase);
+
+
+
+export default function Lista({ navigation }) {
+
+    const guardarNuevo = async(nuevo) =>{
+      await setDoc(doc(db, 'clientes', nuevo.Ncedula), nuevo);
+    }
 
     const eliminar = (index) => {
         Alert.alert(
@@ -29,10 +43,9 @@ export default function Lista({navigation}) {
             { cancelable: true }
         );
     }
+     
 
-    const guardarNuevo = (nuevo) => {
-        setClientes([nuevo, ...clientes])
-    }
+
 
     const [clientes, setClientes] = useState([
 
