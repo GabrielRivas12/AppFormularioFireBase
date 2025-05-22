@@ -2,26 +2,29 @@ import { View, Button, StyleSheet, Text, TouchableOpacity, Alert } from 'react-n
 import { ScrollView } from 'react-native-gesture-handler';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
-
-
-import {collection, 
-    getFirestore,
-    query, doc,
-    setDoc, getDocs} from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import appFirebase from '../Firebase';
 
-    const db = getFirestore(appFirebase);
+import {
+    collection,
+    getFirestore,
+    query, doc,
+    setDoc, getDocs,
+    deleteDoc
+} from 'firebase/firestore';
+
+
+const db = getFirestore(appFirebase);
 
 
 
 export default function Lista({ navigation }) {
 
-    const guardarNuevo = async(nuevo) =>{
-      await setDoc(doc(db, 'clientes', nuevo.Ncedula), nuevo);
+    const guardarNuevo = async (nuevo) => {
+        await setDoc(doc(db, 'clientes', nuevo.Ncedula), nuevo);
     }
 
-    const eliminar = (index) => {
+    const eliminar = (cedula) => {
         Alert.alert(
             'Confirmar aliminacion',
             'Estas seguro de que deseas elimanar este cliente?',
@@ -33,43 +36,37 @@ export default function Lista({ navigation }) {
                 {
                     text: 'Eliminar',
                     style: 'destructive',
-                    onPress: () => {
-                        const nuevaLista = [...clientes];
-                        nuevaLista.splice(index, 1);
-                        setClientes(nuevaLista);
+                    onPress: async () => {
+                        await deleteDoc(doc(db, "clientes", cedula));
                     }
                 },
             ],
             { cancelable: true }
         );
     }
-     
+
 
 
 
     const [clientes, setClientes] = useState([
 
 
-        {
-            Ncedula: '121-060104-1001Q',
-            Nnombres: 'Gabriel Manuel',
-            Napellidos: 'Rivas Castilla',
-            Nfechanac: '19900101',
-            Nsexo: 'Masculino'
-
-        },
-
-        {
-            Ncedula: '121-060104-1001Q',
-            Nnombres: ' Manuel',
-            Napellidos: 'Rivas Castilla',
-            Nfechanac: '19900101',
-            Nsexo: 'Masculino'
-
-        }
-
-
     ]);
+
+    useEffect(() => {
+        LeerDatos();
+    }), [];
+
+    const LeerDatos = async () => {
+        const q = query(collection(db, "clientes"));
+        const querySnapshot = await getDocs(q);
+        const d = [];
+        querySnapshot.forEach((doc) => {
+            const datosBD = doc.data();
+            d.push(datosBD);
+        });
+        setClientes(d);
+    }
 
 
 
@@ -94,7 +91,7 @@ export default function Lista({ navigation }) {
                             <Text style={styles.label}> Cedula: <Text style={styles.valor}> {clientes.Ncedula} </Text> </Text>
 
                             <TouchableOpacity style={styles.botone}
-                                onPress={eliminar} >
+                                onPress={() => eliminar(clientes.Ncedula)} >
                                 <FontAwesome5 name="trash" size={24} color="red" />
                             </TouchableOpacity>
 
