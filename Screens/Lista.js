@@ -1,5 +1,5 @@
 import { View, Button, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import {
     collection,
     getFirestore,
     query, doc,
-    setDoc, getDocs,
+    setDoc, getDocs, getDoc,
     deleteDoc
 } from 'firebase/firestore';
 
@@ -22,6 +22,7 @@ export default function Lista({ navigation }) {
 
     const guardarNuevo = async (nuevo) => {
         await setDoc(doc(db, 'clientes', nuevo.Ncedula), nuevo);
+        await LeerDatos();
     }
 
     const eliminar = (cedula) => {
@@ -38,6 +39,7 @@ export default function Lista({ navigation }) {
                     style: 'destructive',
                     onPress: async () => {
                         await deleteDoc(doc(db, "clientes", cedula));
+                        await LeerDatos();
                     }
                 },
             ],
@@ -55,7 +57,10 @@ export default function Lista({ navigation }) {
 
     useEffect(() => {
         LeerDatos();
-    }), [];
+    }, []);
+
+
+
 
     const LeerDatos = async () => {
         const q = query(collection(db, "clientes"));
@@ -68,16 +73,72 @@ export default function Lista({ navigation }) {
         setClientes(d);
     }
 
+    const buscarCliente = async (valorbuscado) => {
+        if (!valorbuscado || valorbuscado.trim() === '') 
+            
+            return;
+
+        const q = query(collection(db, "clientes"));
+        const querySnapshot = await getDocs(q);
+        const resultados = [];
+
+        const textoBuscado = valorbuscado.toLowerCase();
+
+        querySnapshot.forEach((doc) => {
+            const clienteEncontrado = doc.data();
+
+            if (
+                clienteEncontrado.Ncedula.toLowerCase().includes(textoBuscado) ||
+                clienteEncontrado.Nnombres.toLowerCase().includes(textoBuscado) ||
+                clienteEncontrado.Napellidos.toLowerCase().includes(textoBuscado) ||
+                clienteEncontrado.Nfechanac.toLowerCase().includes(textoBuscado) ||
+                clienteEncontrado.Nsexo.toLowerCase().includes(textoBuscado)
+            ) {
+                resultados.push(clienteEncontrado);
+            }
+        });
+
+        setClientes(resultados);
+    };
 
 
+
+
+
+
+    const [valorBusqueda, setValorBusqueda] = useState('');
 
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.botonADD} onPress={() => navigation.navigate('Formulario', { guardarNuevo })} >
-
                 <FontAwesome5 name="user-plus" size={24} color="#4F8B2E" />
             </TouchableOpacity>
+
+
+
             <Text style={styles.titulo}> Lista de clientes </Text>
+            <View style={styles.conteinerBusqueda}>
+                <Text style={styles.label}> Buscador </Text>
+                <TextInput
+                    style={styles.input}
+                    value={valorBusqueda}
+                    onChangeText={async (texto) => {
+                        setValorBusqueda(texto);
+                        if (texto.trim() !== '') {
+                            await buscarCliente(texto);
+
+                        } else {
+                            LeerDatos();
+                        }
+                    }}
+                    placeholder='-'
+                />
+
+            </View>
+
+
+
+
 
             {clientes.length == 0 ? (
                 <Text style={styles.mensaje}> No hay clientes</Text>
@@ -93,6 +154,11 @@ export default function Lista({ navigation }) {
                             <TouchableOpacity style={styles.botone}
                                 onPress={() => eliminar(clientes.Ncedula)} >
                                 <FontAwesome5 name="trash" size={24} color="red" />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.botonEdit}
+                                onPress={() => navigation.navigate('Formulario', { guardarNuevo, clientesEditar: clientes })} >
+                                <FontAwesome5 name="edit" size={24} color="#4F8B2E" />
                             </TouchableOpacity>
 
                             <Text style={styles.label}> Nombre: <Text style={styles.valor}> {clientes.Nnombres} </Text> </Text>
@@ -118,6 +184,9 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         backgroundColor: '#E6F7E6',
+    },
+    conteinerBusqueda: {
+        marginBottom: 20
     },
     titulo: {
         fontSize: 25,
@@ -175,5 +244,25 @@ const styles = StyleSheet.create({
         right: 10,
         width: 32,
         height: 32,
-    }
+    },
+    botonEdit: {
+        position: 'absolute',
+        top: 10,
+        right: 60,
+        width: 32,
+        height: 32,
+
+
+
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#358B47',
+        padding: 8,
+        marginTop: 5,
+        borderRadius: 5,
+        width: 350,
+        height: 50
+    },
+
 });

@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet, TextInput, Button, Alert, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Picker } from '@react-native-picker/picker';
 
@@ -7,13 +7,28 @@ import { Picker } from '@react-native-picker/picker';
 
 function Formulario({ route, navigation }) {
   
-  const { guardarNuevo } = route.params;
+  const { guardarNuevo, clientesEditar } = route.params;
 
   const [cedula, setCedula] = useState('');
   const [nombres, setNombres] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [fechaNacimiento, SetFechaNacimiento] = useState('');
   const [sexo, setSexo] = useState('');
+
+  useEffect(() => {
+    if(clientesEditar) {
+      setCedula(clientesEditar.Ncedula);
+      setNombres(clientesEditar.Nnombres);
+      setApellidos(clientesEditar.Napellidos);
+      SetFechaNacimiento(clientesEditar.Nfechanac);
+      setSexo(clientesEditar.Nsexo);
+    }
+  }, []);
+
+
+
+
+
 
   const guardar = () => {
     if (!cedula || !nombres || !apellidos || !fechaNacimiento || !sexo ) return null;
@@ -27,6 +42,7 @@ function Formulario({ route, navigation }) {
 
 
     guardarNuevo(nuevoCliente);
+    const mensaje  = clientesEditar ? 'Cliente actualizado correctamente' : 'Dato almacenado correctamente';
     Alert.alert('Datos almacenados', `
     Cédula: ${cedula}
     Nombres: ${nombres}
@@ -59,6 +75,7 @@ function Formulario({ route, navigation }) {
           value={cedula}
           onChangeText={setCedula}
           placeholder='Ej: 365-440955-0002h'
+          editable={!clientesEditar}
         />
 
         <Text style={styles.label}>Nombres: </Text>
@@ -103,7 +120,9 @@ function Formulario({ route, navigation }) {
       <View style={styles.botonGuardar}>
         <TouchableOpacity style={styles.boton}
           onPress={guardar}>
-          <Text style={styles.texto}  >Guardar</Text>
+
+
+          <Text style={styles.texto}  > {clientesEditar ? 'Actualizar cliente' : 'Guardar Cliente' }</Text>
         </TouchableOpacity>
       </View>
 
