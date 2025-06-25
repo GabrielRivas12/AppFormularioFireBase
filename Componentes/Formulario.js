@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TextInput, Button, Alert, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, TextInput, Alert, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
 import { Picker } from '@react-native-picker/picker';
@@ -13,7 +13,7 @@ function Formulario({ route, navigation }) {
   const [nombres, setNombres] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [fechaNacimiento, SetFechaNacimiento] = useState('');
-  const [sexo, setSexo] = useState('');
+  const [sexo, setSexo] = useState('test');
 
   useEffect(() => {
     if(clientesEditar) {
@@ -21,7 +21,6 @@ function Formulario({ route, navigation }) {
       setNombres(clientesEditar.Nnombres);
       setApellidos(clientesEditar.Napellidos);
       SetFechaNacimiento(clientesEditar.Nfechanac);
-      setSexo(clientesEditar.Nsexo);
     }
   }, []);
 
@@ -31,13 +30,14 @@ function Formulario({ route, navigation }) {
 
 
   const guardar = () => {
-    if (!cedula || !nombres || !apellidos || !fechaNacimiento || !sexo ) return null;
+    if (!cedula || !nombres || !apellidos || !fechaNacimiento ) return null;
     const nuevoCliente = {
       Ncedula: cedula,
       Nnombres: nombres,
       Napellidos: apellidos,
       Nfechanac: fechaNacimiento,
-      Nsexo: sexo,
+      NSexo: sexo
+    
     }
 
 
@@ -56,7 +56,7 @@ function Formulario({ route, navigation }) {
     setNombres('');
     setApellidos('');
     SetFechaNacimiento('');
-    setSexo('');
+    setSexo('TEST');
     navigation.goBack();
 
 
@@ -103,17 +103,7 @@ function Formulario({ route, navigation }) {
         ></TextInput>
 
 
-        <Text style={styles.label}>Sexo</Text>
-        <View style={styles.picker}>
-          <Picker
-            selectedValue={sexo}
-            onValueChange={(itemValue) => setSexo(itemValue)}
-          >
-            <Picker.Item label="Seleccione.." value="" />
-            <Picker.Item label="Masculino" value="Masculino" />
-            <Picker.Item label="Femenino" value="Femenino" />
-          </Picker>
-        </View>
+      
 
       </View>
 
