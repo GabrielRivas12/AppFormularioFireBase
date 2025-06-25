@@ -1,11 +1,13 @@
 import { Button, StyleSheet, Text, View } from 'react-native';
 import Navegacion from './Navegacion';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function App() {
   return (
-    <Navegacion>
 
-    </Navegacion>
+    <SafeAreaProvider>  
+    <Navegacion/>
+    </SafeAreaProvider>
 
   );
 }

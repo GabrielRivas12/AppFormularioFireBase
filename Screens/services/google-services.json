@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1074069582144",
+    "project_id": "appgestionclientes-513b0",
+    "storage_bucket": "appgestionclientes-513b0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074069582144:android:7ca1c2580476e327bc4aa5",
+        "android_client_info": {
+          "package_name": "com.gabrielr12.appformulario"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBbIN08cqQuwQYs2rJtSHUDO5An3fsP0w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
