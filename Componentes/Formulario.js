@@ -90,7 +90,7 @@ function Formulario({ route, navigation }) {
         <TextInput
           style={styles.input}
           value={apellidos}
-          onChangeText={setApellidos}
+          onChangeText={setApellidos} //
           placeholder='Apellidos'
         ></TextInput>
 
