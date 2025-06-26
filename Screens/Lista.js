@@ -1,9 +1,9 @@
 import { View, Button, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import appFirebase from '../Firebase';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
     collection,
@@ -110,6 +110,7 @@ export default function Lista({ navigation }) {
 
     return (
         <View style={styles.container}>
+            <SafeAreaView style={{  backgroundColor: '#fff', flex:1, width: 390, alignItems: 'center' }}>  
             <TouchableOpacity style={styles.botonADD} onPress={() => navigation.navigate('Formulario', { guardarNuevo })} >
                 <FontAwesome5 name="user-plus" size={24} color="#4F8B2E" />
             </TouchableOpacity>
@@ -173,7 +174,7 @@ export default function Lista({ navigation }) {
 
             )}
 
-
+                </SafeAreaView>
         </View>
     );
 }

@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet, TextInput, Alert, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 
@@ -64,6 +64,7 @@ function Formulario({ route, navigation }) {
 
   return (
     <View style={styles.container}>
+      <SafeAreaView style={{  backgroundColor: '#fff', flex:1, width: 390, alignItems: 'center' }}> 
       <Text style={styles.titulo}> Registro de datos del cliente  </Text>
 
       <View style={styles.containerInput}>
@@ -114,7 +115,7 @@ function Formulario({ route, navigation }) {
           <Text style={styles.texto}  > {clientesEditar ? 'Actualizar cliente' : 'Guardar Cliente' }</Text>
         </TouchableOpacity>
       </View>
-
+</SafeAreaView>
     </View>
 
 
