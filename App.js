@@ -3,6 +3,11 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import Navegacion from './Navegacion';
 
+import { enableScreens } from 'react-native-screens';
+
+enableScreens(); 
+
+
 export default function App() {
   return (
 <SafeAreaProvider>  
