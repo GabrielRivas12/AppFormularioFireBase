@@ -1,25 +1,27 @@
 import { Text, View, StyleSheet, TextInput, Alert, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Picker } from '@react-native-picker/picker';
 
 
 
 function Formulario({ route, navigation }) {
-  
+
   const { guardarNuevo, clientesEditar } = route.params;
 
   const [cedula, setCedula] = useState('');
   const [nombres, setNombres] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [fechaNacimiento, SetFechaNacimiento] = useState('');
-  const [sexo, setSexo] = useState('test');
+  const [sexo, setSexo] = useState('');
 
   useEffect(() => {
-    if(clientesEditar) {
+    if (clientesEditar) {
       setCedula(clientesEditar.Ncedula);
       setNombres(clientesEditar.Nnombres);
       setApellidos(clientesEditar.Napellidos);
       SetFechaNacimiento(clientesEditar.Nfechanac);
+      setSexo(clientesEditar.Nsexo);
     }
   }, []);
 
@@ -29,19 +31,18 @@ function Formulario({ route, navigation }) {
 
 
   const guardar = () => {
-    if (!cedula || !nombres || !apellidos || !fechaNacimiento ) return null;
+    if (!cedula || !nombres || !apellidos || !fechaNacimiento) return null;
     const nuevoCliente = {
       Ncedula: cedula,
       Nnombres: nombres,
       Napellidos: apellidos,
       Nfechanac: fechaNacimiento,
-      NSexo: sexo
-    
+      Nsexo: sexo
     }
 
 
     guardarNuevo(nuevoCliente);
-    const mensaje  = clientesEditar ? 'Cliente actualizado correctamente' : 'Dato almacenado correctamente';
+    const mensaje = clientesEditar ? 'Cliente actualizado correctamente' : 'Dato almacenado correctamente';
     Alert.alert('Datos almacenados', `
     Cédula: ${cedula}
     Nombres: ${nombres}
@@ -55,7 +56,7 @@ function Formulario({ route, navigation }) {
     setNombres('');
     setApellidos('');
     SetFechaNacimiento('');
-    setSexo('TEST');
+    setSexo('');
     navigation.goBack();
 
 
@@ -64,58 +65,68 @@ function Formulario({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <SafeAreaView style={{  backgroundColor: '#fff', flex:1, width: 390, alignItems: 'center' }}> 
-      <Text style={styles.titulo}> Registro de datos del cliente  </Text>
+      <SafeAreaView style={{ backgroundColor: '#fff', flex: 1, width: 390, alignItems: 'center' }}>
+        <Text style={styles.titulo}> Registro de datos del cliente  </Text>
 
-      <View style={styles.containerInput}>
+        <View style={styles.containerInput}>
 
-        <Text style={styles.label}> Cedula </Text>
-        <TextInput
-          style={styles.input}
-          value={cedula}
-          onChangeText={setCedula}
-          placeholder='Ej: 365-440955-0002h'
-          editable={!clientesEditar}
-        />
+          <Text style={styles.label}> Cedula </Text>
+          <TextInput
+            style={styles.input}
+            value={cedula}
+            onChangeText={setCedula}
+            placeholder='Ej: 365-440955-0002h'
+            editable={!clientesEditar}
+          />
 
-        <Text style={styles.label}>Nombres: </Text>
-        <TextInput
-          style={styles.input}
-          value={nombres}
-          onChangeText={setNombres}
-          placeholder='Ej: Juan carlos '>
-        </TextInput>
+          <Text style={styles.label}>Nombres: </Text>
+          <TextInput
+            style={styles.input}
+            value={nombres}
+            onChangeText={setNombres}
+            placeholder='Ej: Juan carlos '>
+          </TextInput>
 
-        <Text style={styles.label}>Apellidos</Text>
-        <TextInput
-          style={styles.input}
-          value={apellidos}
-          onChangeText={setApellidos} //
-          placeholder='Apellidos'
-        ></TextInput>
+          <Text style={styles.label}>Apellidos</Text>
+          <TextInput
+            style={styles.input}
+            value={apellidos}
+            onChangeText={setApellidos} //
+            placeholder='Apellidos'
+          ></TextInput>
 
-        <Text style={styles.label}>Fecha de nacimiento</Text>
-        <TextInput
-          style={styles.input}
-          value={fechaNacimiento}
-          onChangeText={SetFechaNacimiento}
-          placeholder='YYYY-MM-DD'
-        ></TextInput>
+          <Text style={styles.label}>Fecha de nacimiento</Text>
+          <TextInput
+            style={styles.input}
+            value={fechaNacimiento}
+            onChangeText={SetFechaNacimiento}
+            placeholder='YYYY-MM-DD'
+          ></TextInput>
+
+          <Text style={styles.label}>Sexo</Text>
+          <View style={styles.picker}>
+            <Picker
+              selectedValue={sexo}
+              onValueChange={(itemValue) => setSexo(itemValue)}
+            >
+              <Picker.Item label="Seleccione.." value="" />
+              <Picker.Item label="Masculino" value="Masculino" />
+              <Picker.Item label="Femenino" value="Femenino" />
+            </Picker>
+          </View>
 
 
-      
+        </View>
 
-      </View>
-
-      <View style={styles.botonGuardar}>
-        <TouchableOpacity style={styles.boton}
-          onPress={guardar}>
+        <View style={styles.botonGuardar}>
+          <TouchableOpacity style={styles.boton}
+            onPress={guardar}>
 
 
-          <Text style={styles.texto}  > {clientesEditar ? 'Actualizar cliente' : 'Guardar Cliente' }</Text>
-        </TouchableOpacity>
-      </View>
-</SafeAreaView>
+            <Text style={styles.texto}  > {clientesEditar ? 'Actualizar cliente' : 'Guardar Cliente'}</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     </View>
 
 
