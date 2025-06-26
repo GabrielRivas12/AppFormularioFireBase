@@ -1,7 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import Home from './Screens/Home';
 import Formulario from './Componentes/Formulario';
 import Lista from './Screens/Lista';
 
